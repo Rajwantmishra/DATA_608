@@ -1,0 +1,120 @@
+---
+title: "R Notebook"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+**Principles of Data Visualization and Introduction to ggplot2**
+
+I have provided you with data about the 5,000 fastest growing companies in the US, as compiled by Inc. magazine. lets read this in:
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+
+inc <- read.csv("https://raw.githubusercontent.com/charleyferrari/CUNY_DATA_608/master/module1/Data/inc5000_data.csv", header= TRUE)
+
+```
+
+And lets preview this data:
+
+```{r}
+
+head(inc)
+
+```
+```{r}
+
+summary(inc)
+
+```
+
+Think a bit on what these summaries mean. Use the space below to add some more relevant non-visual exploratory information you think helps you understand this data:
+
+```{r}
+
+# Insert your code here, create more chunks as necessary
+inc %>% group_by(State) %>% summarise(Count= n(),mean_rev = mean(Revenue), sd_rev = sd(Revenue), R_SD_ALL= sd(Revenue)/sd(inc$Revenue)) %>% arrange(.,desc(R_SD_ALL))
+```
+In my data I could see that there are Eight sates that did better than the natioanl std deviation of the Revenue.It seem like IL is having more potential with less number of company they were able to produce such a Revenue. 
+## Question 1
+
+Create a graph that shows the distribution of companies in the dataset by State (ie how many are in each state). There are a lot of States, so consider which axis you should use. This visualization is ultimately going to be consumed on a 'portrait' oriented screen (ie taller than wide), which should further guide your layout choices.
+
+```{r}
+
+# Answer Question 1 here
+inc %>% 
+  group_by(State) %>% 
+  summarise(Count= n()) %>% 
+  ggplot(mapping = aes(x= State, y=Count)) +
+  geom_col()+
+  theme(axis.text.x = element_text(angle = 60, colour="gray",hjust = 1,size=rel(0.86)))
+
+
+
+```
+
+## Quesiton 2
+
+Lets dig in on the state with the 3rd most companies in the data set. Imagine you work for the state and are interested in how many people are employed by companies in different industries. Create a plot that shows the average and/or median employment by industry for companies in this state (only use cases with full data, use R's `complete.cases()` function.) In addition to this, your graph should show how variable the ranges are, and you should deal with outliers.
+
+```{r}
+
+# Answer Question 2 here
+# Third most company in the dataset
+inc %>% 
+  group_by(State) %>% 
+  summarise(Count= n()) %>% 
+  arrange(.,desc(Count)) %>% .[3,]
+
+# how many people are employed by companies in different industries.
+inc %>% filter(.,State== "NY") %>%   
+  plyr::ddply(.,'Industry',summarise,E_Count = sum(Employees)) 
+
+# Create a plot that shows the average and/or median employment by industry for companies in this state
+inc %>% filter(.,State== "NY") %>%   
+  plyr::ddply(.,'Industry',summarise,E_Count = sum(Employees),Mean_Emp = mean(Employees), Med_Emp=median(Employees))  %>% gather(key="Type" , value = "Count_EMP","Mean_Emp","Med_Emp","E_Count") %>% .[which(.$Type %in% c("Mean_Emp","Med_Emp")),] %>% 
+  ggplot(mapping = aes(y= Industry, x=Count_EMP,fill = Type)) + 
+  geom_col() 
+
+
+#Taking care of outliers
+
+inc %>% filter(.,State== "NY") %>%   
+  plyr::ddply(.,'Industry',summarise,E_Count = sum(Employees),Mean_Emp = mean(Employees), Med_Emp=median(Employees))  %>% gather(key="Type" , value = "Count_EMP","Mean_Emp","Med_Emp","E_Count") %>% .[which(.$Type %in% c("Mean_Emp","Med_Emp")),] %>% .[-which(.$Count_EMP > 1000),] %>% 
+  ggplot(mapping = aes(y= Industry, x=Count_EMP,fill = Type)) + 
+  geom_col() +
+  labs(title = "Mean/Median of Employee Count in NY",
+       y = "Sector") +
+  facet_wrap(~Type)
+
+
+
+
+```
+
+## Question 3
+
+Now imagine you work for an investor and want to see which industries generate the most revenue per employee. Create a chart that makes this information clear. Once again, the distribution per industry should be shown.
+
+```{r}
+
+# Answer Question 3 here
+
+SUM_NY_TOTL_REV <- inc %>% filter(.,State== "NY") %>%     plyr::ddply(.,'Industry',summarise,
+                                                   Rev_Per_Emp = sum(Revenue)/sum(Employees)) %>% .[,"Rev_Per_Emp"] %>% sum(.)
+inc %>% filter(.,State== "NY") %>%     plyr::ddply(.,'Industry',summarise,
+                                                   Rev_Per_Emp = sum(Revenue)/sum(Employees),
+                                                   p=( Rev_Per_Emp*100)/SUM_NY_TOTL_REV)%>% 
+  ggplot(mapping = aes(y= Industry, x=(p))) + 
+   geom_bar(stat = "identity") +
+   labs(title = "Revenue per Employee in NY (%) ", y = "Sector",  x = "% of Revenue") +  theme_minimal()
+
+
+
+
+```
+
+Here I have taken the sum of per employee revenue in NY state, then got the % of the same agaist total per person Employee Revenue. The above chart suggest that Enery and IT services have the most Revenue per employee. 
