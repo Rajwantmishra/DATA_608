@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Page Template</title>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.7.4/d3.min.js"></script>
+    </head>
+    <body>
+      
+
+        <p><form>
+                <label> Type the word:</label>
+                <input id="num" type="text" size="20">
+                <!-- <input type="button" value="Reverse" onClick="changeDir()"> -->
+                <br/><br/>
+                <label>
+                    Question 1 Result:
+                </label>
+                <label id="qlbl" style="color:crimson;">__________</label>                
+            </form>
+        </p>
+
+        <p>
+            <label> Type Number:</label>
+                <input id="txtnum" type="number" size="10" >                
+                <br/><br/>
+            </p>
+
+            <table id="attack-table" class="table objecttable table-sm table-dark table-responsive">
+                <thead>
+                  <tr>
+                    <th>C1</th>
+                    <th>C2</th>
+                    <th>C3</th>
+                    <th>C4</th>
+                  </tr>
+                </thead>
+              </table>       
+        <style>
+            .objecttable td {
+              padding: 8px;
+            }
+        </style>
+
+        <script type="text/javascript" src="./example.js"></script>
+    </body>
+</html>
