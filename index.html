@@ -1,7 +1,65 @@
 <!DOCTYPE html>
-<html>
-<body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
-</body>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Page Template</title>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.7.4/d3.min.js"></script>
+    </head>
+    <body>
+      
+
+        <p><form>
+                <label> Q1 Type the word to Reverse it:</label>
+                <input id="num" type="text" size="20">
+                <!-- <input type="button" value="Reverse" onClick="changeDir()"> -->
+                <br/><br/>
+                <label>
+                    Question 1 Result:
+                </label>
+                <label id="qlbl" style="color:crimson;">__________</label>                
+            </form>
+        </p>
+
+        <p>
+            <label> Q2: Type Number to see multiples in 5 X 4:</label>
+                <input id="txtnum" type="number" size="10" >                
+                <br/><br/>
+            </p>
+
+            <table id="attack-table" class="table objecttable table-sm table-dark table-responsive">
+                <thead>
+                  <tr>
+                    <th>C1</th>
+                    <th>C2</th>
+                    <th>C3</th>
+                    <th>C4</th>
+                  </tr>
+                </thead>
+              </table>
+
+              <p>
+                <label> Q3 & 4: Type the name of President to start Searching:</label>
+                    <input id="txtpre" type="text" size="10" placeholder="Search.." >                
+                    <br/><br/>
+                </p>
+              
+              <table id="presd-table" class="table objecttable table-sm table-dark table-responsive">
+                <thead>
+                  <tr>
+                   
+                    <th>Name</th>
+                    <th>Height</th>
+                    <th>Weight</th>
+                  </tr>
+                </thead>
+              </table>   
+
+        <style>
+            .objecttable td {
+              padding: 8px;
+            }
+        </style>
+
+        <script type="text/javascript" src="./example.js"></script>
+    </body>
 </html>
